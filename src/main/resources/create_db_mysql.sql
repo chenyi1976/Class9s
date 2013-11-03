@@ -6,7 +6,7 @@ CREATE TABLE `group` (
   `pin2` varchar(45) NOT NULL,
   `last_update` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1$$
+)
 
 CREATE TABLE `contact` (
   `id` int(11) NOT NULL DEFAULT '0',
@@ -19,7 +19,7 @@ CREATE TABLE `contact` (
   `city` varchar(45) DEFAULT NULL,
   `last_update` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1$$
+)
 
 CREATE TABLE `group_contact` (
   `group_id` int(11) NOT NULL,
@@ -27,16 +27,16 @@ CREATE TABLE `group_contact` (
   PRIMARY KEY (`group_id`,`contact_id`),
   KEY `group_id_idx` (`group_id`),
   KEY `contact_id_idx` (`contact_id`),
-  CONSTRAINT `group_id` FOREIGN KEY (`group_id`) REFERENCES `group` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `contact_id` FOREIGN KEY (`contact_id`) REFERENCES `contact` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1$$
+  CONSTRAINT `group_contact_group_id` FOREIGN KEY (`group_id`) REFERENCES `group` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `group_contact_contact_id` FOREIGN KEY (`contact_id`) REFERENCES `contact` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+)
 
 CREATE TABLE `avator` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `file` varchar(45) DEFAULT NULL,
   `last_update` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1$$
+)
 
 CREATE TABLE `contact_avator` (
   `contact_id` int(11) NOT NULL,
@@ -46,5 +46,5 @@ CREATE TABLE `contact_avator` (
   KEY `avator_id_idx` (`avator_id`),
   CONSTRAINT `contact_avator_contact_id` FOREIGN KEY (`contact_id`) REFERENCES `contact` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `contact_avator_avator_id` FOREIGN KEY (`avator_id`) REFERENCES `avator` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1$$
+)
 
