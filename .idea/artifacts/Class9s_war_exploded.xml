@@ -1,0 +1,21 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="Class9s:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/Class9s_war_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="Class9s/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="Class9s" />
+          <element id="jpa-descriptors" facet="Class9s/jpa/JPA" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="JAX-RS-jersey-1.12" />
+          <element id="library" level="project" name="JPA 2.0-2.0" />
+          <element id="library" level="project" name="junit:junit:4.11" />
+          <element id="library" level="project" name="mysql:mysql-connector-java:5.1.9" />
+          <element id="library" level="project" name="org.hibernate:hibernate-entitymanager:4.2.7.SP1" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>

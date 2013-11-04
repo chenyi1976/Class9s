@@ -1,11 +1,15 @@
 package me.chenyi.util;
 
+import me.chenyi.model.GroupData;
 import me.chenyi.model.GroupEntity;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -26,7 +30,10 @@ public class ModelUtil {
      * @param pin1
      * @param pin2
      */
-    public static void createGroup(String name, String pin1, String pin2) {
+    public static GroupData createGroup(String name, String pin1, String pin2) {
+
+        GroupData result = null;
+
         EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
         EntityManager entityManager = managerFactory.createEntityManager();
         try {
@@ -39,8 +46,12 @@ public class ModelUtil {
             groupEntity.setLastUpdate(new Timestamp(System.currentTimeMillis()));
 
             entityManager.persist(groupEntity);
+
+            result = new GroupData(groupEntity);
+
             entityManager.getTransaction().commit();
         } catch (Exception ex) {
+            ex.printStackTrace();
             try {
                 entityManager.getTransaction().rollback();
             } catch (Exception e) {
@@ -48,20 +59,20 @@ public class ModelUtil {
         } finally {
             entityManager.close();
         }
+
+        return result;
     }
 
-    public static void updateGroup(int id, String name, String pin1, String pin2) {
+    public static GroupData updateGroup(int id, String name, String pin1, String pin2) {
         EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
         EntityManager entityManager = managerFactory.createEntityManager();
         try {
             GroupEntity groupEntity = entityManager.find(GroupEntity.class, new Integer(id));
 
             if (groupEntity == null)
-                return;
+                return null;
 
             entityManager.getTransaction().begin();
-
-            //todo: how to get the existing group?
 
             groupEntity.setName(name);
             groupEntity.setPin1(pin1);
@@ -70,6 +81,8 @@ public class ModelUtil {
 
             entityManager.persist(groupEntity);
             entityManager.getTransaction().commit();
+
+            return new GroupData(groupEntity);
         } catch (Exception ex) {
             try {
                 entityManager.getTransaction().rollback();
@@ -78,15 +91,15 @@ public class ModelUtil {
         } finally {
             entityManager.close();
         }
+        return null;
     }
 
-    public static GroupEntity findGroup(int id) {
+    public static GroupData findGroup(int id) {
         EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
         EntityManager entityManager = managerFactory.createEntityManager();
         try {
             GroupEntity groupEntity = entityManager.find(GroupEntity.class, new Integer(id));
-
-            return groupEntity;
+            return new GroupData(groupEntity);
         } catch (Exception ex) {
             try {
                 entityManager.getTransaction().rollback();
@@ -98,13 +111,14 @@ public class ModelUtil {
         return null;
     }
 
-    public static GroupEntity findGroup(String name) {
+    public static GroupData findGroup(String name) {
         EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
         EntityManager entityManager = managerFactory.createEntityManager();
         try {
-            GroupEntity groupEntity = null;//entityManager.find(GroupEntity.class, new Integer(id));
-
-            return groupEntity;
+            Query query = entityManager.createQuery("Select ge from GroupEntity ge where ge.name=:arg1");
+            query.setParameter("arg1", name);
+            GroupEntity groupEntity = (GroupEntity)query.getSingleResult();
+            return new GroupData(groupEntity);
         } catch (Exception ex) {
             try {
                 entityManager.getTransaction().rollback();
@@ -114,6 +128,36 @@ public class ModelUtil {
             entityManager.close();
         }
         return null;
+    }
+
+    public static List<GroupData> listGroup(int start, int count) {
+        List<GroupData> result = new ArrayList();
+
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
+        EntityManager entityManager = managerFactory.createEntityManager();
+        try
+        {
+            Query query = entityManager.createQuery("Select ge from GroupEntity ge");
+            List resultList = query.getResultList();
+            int from = Math.max(start, resultList.size() - count);
+            int to = Math.min(start + count, resultList.size());
+
+            for(int i = from; i < to; i++)
+            {
+                GroupEntity groupEntity = (GroupEntity)resultList.get(i);
+                result.add(new GroupData(groupEntity));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            try {
+                entityManager.getTransaction().rollback();
+            } catch (Exception e) {
+            }
+        } finally {
+            entityManager.close();
+        }
+
+        return result;
     }
 
     //get contact id list by group.

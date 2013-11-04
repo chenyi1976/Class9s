@@ -1,5 +1,11 @@
 package me.chenyi.util;
 
+import java.io.IOException;
+import java.util.List;
+
+import me.chenyi.model.GroupData;
+import me.chenyi.model.GroupEntity;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Test;
 
 /**
@@ -17,4 +23,21 @@ public class TestModelUtil {
         ModelUtil.createGroup("Sean", "1234", "5678");
     }
 
+    @Test
+    public void testListGroup()
+    {
+        List<GroupData> groupEntities = ModelUtil.listGroup(0, 10);
+
+        ObjectMapper mapper = new ObjectMapper();
+        try
+        {
+            String s = mapper.writeValueAsString(groupEntities);
+            System.out.println("s = " + s);
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+        }
+        System.out.println("groupEntities.size() = " + groupEntities.size());
+    }
 }
