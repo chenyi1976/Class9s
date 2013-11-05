@@ -9,7 +9,7 @@ CREATE TABLE `group` (
 )
 
 CREATE TABLE `contact` (
-  `id` int(11) NOT NULL DEFAULT '0',
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
   `phone` varchar(45) DEFAULT NULL,
   `phone2` varchar(45) DEFAULT NULL,

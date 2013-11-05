@@ -1,8 +1,6 @@
 package me.chenyi.model;
 
-import javax.persistence.Basic;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.sql.Timestamp;
 
 /**
@@ -19,6 +17,7 @@ public class GroupEntity {
 
     @javax.persistence.Column(name = "id")
     @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
     public int getId() {
         return id;
     }
